@@ -5,10 +5,6 @@ export default function WebhookData({ webhookDataList }) {
     return JSON.stringify(data, null, 2);
   };
 
-  const formatDate = (date) => {
-    return new Date(date).toLocaleString();
-  };
-
   return (
     <div className="space-y-4">
       {webhookDataList.map((item) => (
@@ -18,7 +14,7 @@ export default function WebhookData({ webhookDataList }) {
               Webhook ID: {item.id}
             </h3>
             <p className="text-sm text-gray-600 mb-2">
-              Received at: {formatDate(item.timestamp)}
+              Received at: {item.timestamp}
             </p>
             <div className="mb-4">
               <h4 className="text-md font-semibold mb-2">Headers:</h4>

@@ -10,10 +10,18 @@ import { Toaster } from "@/components/ui/toaster";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 
+const webhookID = uuidv4();
+
 export default function Home() {
-  const [webhook, setWebhook] = useState(null);
+  const [webhook] = useState({ id: webhookID });
   const [webhookDataList, setWebhookDataList] = useState([]);
+  const [mounted, setMounted] = useState(false);
   const { toast } = useToast();
+
+  // Handle client-side mounting
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const clearWebhookData = () => {
     setWebhookDataList([]);
@@ -24,26 +32,24 @@ export default function Home() {
   };
 
   useEffect(() => {
-    const newWebhookId = uuidv4();
-    setWebhook({ id: newWebhookId });
-
     const socket = io({
       path: "/api/socketio",
     });
 
     socket.on("connect", () => {
       console.log("Connected to Socket.IO server");
-      socket.emit("join", newWebhookId);
+      socket.emit("join", webhook.id);
     });
 
     socket.on("webhookData", (data) => {
-      if (data.webhookId === newWebhookId) {
+      if (data.webhookId === webhook.id) {
         setWebhookDataList((prevList) => [
           {
-            id: data.webhookId,
+            id: uuidv4(),
+            webhookId: data.webhookId,
             payload: data.payload,
             headers: data.headers,
-            timestamp: new Date(),
+            timestamp: new Date().toLocaleString(),
           },
           ...prevList,
         ]);
@@ -58,17 +64,31 @@ export default function Home() {
     return () => {
       socket.disconnect();
     };
-  }, [toast]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Don't render content until client-side hydration is complete
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <div className="container mx-auto p-4">
-      {webhook && <WebhookList webhook={webhook} />}
+      <WebhookList webhook={webhook} />
       <div className="mt-8">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">Webhook Data</h2>
-          <Button onClick={clearWebhookData} variant="destructive" size="sm">
-            <Trash2 className="mr-2 h-4 w-4" />
-            Clear Messages
+          <div className="flex items-center gap-4">
+            <span className="px-2 py-1 text-md bg-green-700 text-white dark:bg-green-800 rounded-lg">
+              {webhookDataList.length} messages
+            </span>
+          </div>
+          <Button
+            onClick={clearWebhookData}
+            variant="destructive"
+            size="icon"
+            className="h-8 w-8"
+          >
+            <Trash2 className="h-4 w-4" />
           </Button>
         </div>
         <WebhookData webhookDataList={webhookDataList} />
