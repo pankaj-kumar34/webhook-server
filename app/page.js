@@ -51,6 +51,13 @@ export default function Home() {
       title: "Webhook Refreshed",
       description: "A new webhook URL has been generated",
     });
+
+    socket.disconnect();
+
+    socket.on("connect", () => {
+      console.log("Connected to Socket.IO server");
+      socket.emit("join", newId);
+    });
   };
 
   useEffect(() => {
