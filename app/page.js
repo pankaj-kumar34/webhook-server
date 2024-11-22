@@ -51,13 +51,6 @@ export default function Home() {
       title: "Webhook Refreshed",
       description: "A new webhook URL has been generated",
     });
-
-    socket.disconnect();
-
-    socket.on("connect", () => {
-      console.log("Connected to Socket.IO server");
-      socket.emit("join", newId);
-    });
   };
 
   useEffect(() => {
@@ -94,7 +87,7 @@ export default function Home() {
       socket.disconnect();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [webhook.id]);
 
   // Don't render content until client-side hydration is complete
   if (!mounted) {
