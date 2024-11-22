@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { RefreshCw } from "lucide-react";
 
-export default function WebhookList({ webhook }) {
+export default function WebhookList({ webhook, onRefresh }) {
   const [copied, setCopied] = useState(false);
 
   const webhookUrl = `${
@@ -21,13 +23,23 @@ export default function WebhookList({ webhook }) {
   return (
     <Card className="mb-4">
       <CardContent className="pt-6">
-        <div
-          className="bg-secondary p-4 rounded-md text-center break-all cursor-pointer"
-          onClick={copyToClipboard}
-        >
-          <span className="text-sm font-mono">
-            {copied ? "Copied!" : webhookUrl}
-          </span>
+        <div className="flex items-center gap-2">
+          <div
+            className="flex-1 bg-secondary p-4 rounded-md text-center break-all cursor-pointer"
+            onClick={copyToClipboard}
+          >
+            <span className="text-sm font-mono">
+              {copied ? "Copied!" : webhookUrl}
+            </span>
+          </div>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={onRefresh}
+            className="h-12 w-12 shrink-0"
+          >
+            <RefreshCw className="h-4 w-4" />
+          </Button>
         </div>
       </CardContent>
     </Card>

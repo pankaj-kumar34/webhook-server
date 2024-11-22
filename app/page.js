@@ -10,10 +10,21 @@ import { Toaster } from "@/components/ui/toaster";
 import { Button } from "@/components/ui/button";
 import { Trash2 } from "lucide-react";
 
-const webhookID = uuidv4();
+const getWebhookId = () => {
+  if (typeof window !== "undefined") {
+    const storedId = localStorage.getItem("webhookId");
+    if (storedId) return storedId;
+
+    const newId = uuidv4();
+    localStorage.setItem("webhookId", newId);
+    return newId;
+  }
+
+  return uuidv4();
+};
 
 export default function Home() {
-  const [webhook] = useState({ id: webhookID });
+  const [webhook, setWebhook] = useState({ id: getWebhookId() });
   const [webhookDataList, setWebhookDataList] = useState([]);
   const [mounted, setMounted] = useState(false);
   const { toast } = useToast();
@@ -28,6 +39,17 @@ export default function Home() {
     toast({
       title: "Webhook Data Cleared",
       description: "All webhook messages have been cleared",
+    });
+  };
+
+  const refreshWebhook = () => {
+    const newId = uuidv4();
+    localStorage.setItem("webhookId", newId);
+    setWebhook({ id: newId });
+    setWebhookDataList([]); // Clear existing webhook data
+    toast({
+      title: "Webhook Refreshed",
+      description: "A new webhook URL has been generated",
     });
   };
 
@@ -74,7 +96,7 @@ export default function Home() {
 
   return (
     <div className="container mx-auto p-4">
-      <WebhookList webhook={webhook} />
+      <WebhookList webhook={webhook} onRefresh={refreshWebhook} />
       <div className="mt-8">
         <div className="flex justify-between items-center mb-4">
           <div className="flex items-center gap-4">
