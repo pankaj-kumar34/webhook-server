@@ -1,11 +1,18 @@
 import localFont from "next/font/local";
+import { Google_Sans, Inter } from "next/font/google";
+import { ThemeProvider } from "next-themes";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+
+const googleSans = Google_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-google-sans",
 });
 
 const geistMono = localFont({
@@ -15,18 +22,20 @@ const geistMono = localFont({
 });
 
 export const metadata = {
-  title: "Webhook Service",
-  description: "A simple webhook service",
+  title: "HookPulse — Webhook Inspector",
+  description: "Instant webhook endpoint for testing and debugging",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-background font-sans text-foreground`}
+        className={`${inter.variable} ${googleSans.variable} ${geistMono.variable} bg-background font-sans text-foreground antialiased`}
       >
-        {children}
-        <Toaster />
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+          {children}
+          <Toaster position="bottom-right" />
+        </ThemeProvider>
       </body>
     </html>
   );
