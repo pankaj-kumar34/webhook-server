@@ -11,7 +11,7 @@ export default function WebhookData({ webhookDataList }) {
         <Card key={item.id + item.timestamp}>
           <CardContent className="pt-6">
             <h3 className="text-lg font-semibold mb-2">
-              Webhook ID: {item.id}
+              Webhook ID: {item.webhookId}
             </h3>
             <p className="text-sm text-gray-600 mb-2">
               Received at: {item.timestamp}
