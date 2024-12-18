@@ -2,7 +2,11 @@ import { Card, CardContent } from "@/components/ui/card";
 
 export default function WebhookData({ webhookDataList }) {
   const formatJSON = (data) => {
-    return JSON.stringify(data, null, 2);
+    try {
+      return JSON.stringify(data, null, 2);
+    } catch (error) {
+      return data;
+    }
   };
 
   return (

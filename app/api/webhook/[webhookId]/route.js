@@ -1,9 +1,23 @@
 import { NextResponse } from "next/server";
 
 export async function POST(request, { params }) {
+  let payload;
+
   const webhookId = params.webhookId;
-  const payload = await request.json();
   const headers = Object.fromEntries(request.headers);
+
+  if (headers["content-type"]) {
+    if (headers["content-type"].includes("application/json")) {
+      payload = await request.json();
+    } else if (headers["content-type"].includes("text/plain")) {
+      payload = await request.text();
+    } else {
+      return NextResponse.json(
+        { success: false, error: "Unsupported content type" },
+        { status: 400 }
+      );
+    }
+  }
 
   if (global.io) {
     global.io
