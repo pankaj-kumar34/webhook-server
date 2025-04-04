@@ -1,6 +1,18 @@
 import { NextResponse } from "next/server";
 
 export async function POST(request, { params }) {
+  return handleRequest(request, params);
+}
+
+export async function PUT(request, { params }) {
+  return handleRequest(request, params);
+}
+
+export async function PATCH(request, { params }) {
+  return handleRequest(request, params);
+}
+
+async function handleRequest(request, { params }) {
   let payload;
 
   const webhookId = params.webhookId;
