@@ -12,7 +12,7 @@ export async function PATCH(request, { params }) {
   return handleRequest(request, params);
 }
 
-async function handleRequest(request, { params }) {
+async function handleRequest(request, params) {
   let payload;
 
   const webhookId = params.webhookId;
